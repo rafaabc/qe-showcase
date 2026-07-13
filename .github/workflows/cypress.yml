@@ -1,0 +1,43 @@
+name: E2E Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch: # manual "Run workflow" button in the Actions tab -
+    # trigger on demand without pushing code
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # package-lock.json isn't committed (gitignored, matching the scaffold),
+      # so cypress-io/github-action can't be used here: it requires a
+      # lockfile on disk to detect the package manager and errors out before
+      # honoring install-command/cache overrides. Explicit steps instead -
+      # no lockfile needed, no Cypress-binary cache (small suite, acceptable
+      # trade-off). No build/start step: cypress.config.js baseUrl targets
+      # hosted saucedemo.com, so there's no local app to boot.
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Cypress tests
+        run: npm run cypress:run
+
+      - name: Upload screenshots on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots/
+          if-no-files-found: ignore # suite passes -> no screenshots dir
+          retention-days: 7

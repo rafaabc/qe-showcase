@@ -1,5 +1,7 @@
 # QE Showcase
 
+[![E2E Tests](https://github.com/rafaabc/qe-showcase/actions/workflows/cypress.yml/badge.svg)](https://github.com/rafaabc/qe-showcase/actions/workflows/cypress.yml)
+
 Welcome!
 
 This repository is a take-home exercise for Quality Engineering (QE) candidates. The goal is **not** to grade you on correctness or to create a pass/fail test. Instead, we want to see how you approach real-world quality engineering problems, communicate your thought process, and use your favorite tools.
